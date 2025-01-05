@@ -33,6 +33,24 @@ app.post("/addEmployee", async (req: Request, res: Response) => {
   }
 });
 
+// Update employee route
+app.put("/updateEmployee/:id", async (req: Request, res: Response) => {
+  try {
+    const employeeId = req.params.id;
+    const updatedEmployee = req.body;
+    const employee = await EmployeeModel.findByPk(employeeId);
+
+    if (employee) {
+      await employee.update(updatedEmployee);
+      res.status(200).json({ message: "Employee updated successfully" });
+    } else {
+      res.status(404).json({ message: "Employee not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "An error occured while updating data" });
+  }
+});
+
 // Get all employee route
 app.get("/getEmployees", async (req: Request, res: Response) => {
   try {
