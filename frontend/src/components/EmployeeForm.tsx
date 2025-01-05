@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 
-const EmployeeForm = ({ editEmployee }) => {
-  console.log(editEmployee);
-
+const EmployeeForm = ({ editEmployee, onUpdate }) => {
   const [name, setName] = useState<string>("");
   const [jobTitle, setJobTitle] = useState<string>("");
   const [department, setDepartment] = useState<string>("");
   const [employmentType, setEmploymentType] = useState<string>("");
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+  const [buttonText, setButtonText] = useState<string>();
 
   useEffect(() => {
     if (editEmployee) {
@@ -15,11 +14,13 @@ const EmployeeForm = ({ editEmployee }) => {
       setJobTitle(editEmployee.jobTitle);
       setDepartment(editEmployee.department);
       setEmploymentType(editEmployee.employmentType);
+      setButtonText("Update Employee");
     } else {
       setName("");
       setJobTitle("");
       setDepartment("");
       setEmploymentType("");
+      setButtonText("Add Employee");
     }
   }, [editEmployee]);
 
@@ -34,23 +35,50 @@ const EmployeeForm = ({ editEmployee }) => {
     // I will add my employee to database
     e.preventDefault();
 
-    fetch(`http://localhost:3000/addEmployee`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(employeeDetails),
-    })
-      .then(function (res) {
-        console.log(res);
+    if (editEmployee) {
+      fetch(`http://localhost:3000/updateEmployee/${editEmployee.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "PUT",
+        body: JSON.stringify(employeeDetails),
       })
-      .catch(function (res) {
-        console.log(res);
-      });
+        .then(function (res) {
+          setButtonText("Updated Successfully");
+          setTimeout(() => {
+            setButtonText("Add Employee");
+          }, 1000);
+          onUpdate();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      setName("");
+      setJobTitle("");
+      setIsFormSubmitted(true);
+    } else {
+      fetch(`http://localhost:3000/addEmployee`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(employeeDetails),
+      })
+        .then(function (res) {
+          setButtonText("Added Successfully");
+          setTimeout(() => {
+            setButtonText("Add Employee");
+          }, 1000);
+          onUpdate();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
 
-    setName("");
-    setJobTitle("");
-    setIsFormSubmitted(true);
+      setName("");
+      setJobTitle("");
+      setIsFormSubmitted(true);
+    }
   };
 
   return (
@@ -91,7 +119,7 @@ const EmployeeForm = ({ editEmployee }) => {
           className="form-select mb-3"
           name=""
           id=""
-          value={isFormSubmitted ? "" : department}
+          // value={isFormSubmitted ? "" : department}
           required
         >
           <option selected value="">
@@ -108,7 +136,7 @@ const EmployeeForm = ({ editEmployee }) => {
           className="form-select mb-3"
           name=""
           id=""
-          value={isFormSubmitted ? "" : employmentType}
+          // value={isFormSubmitted ? "" : employmentType}
           required
         >
           <option selected value="">
@@ -120,7 +148,7 @@ const EmployeeForm = ({ editEmployee }) => {
         </select>
 
         <button type="submit" className="btn btn-primary">
-          {editEmployee ? "Update Employee" : "Add Employee"}
+          {buttonText}
         </button>
       </form>
     </div>
