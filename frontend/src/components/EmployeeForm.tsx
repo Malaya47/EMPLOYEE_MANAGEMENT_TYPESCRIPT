@@ -5,6 +5,7 @@ const EmployeeForm = () => {
   const [jobTitle, setJobTitle] = useState<string>("");
   const [department, setDepartment] = useState<string>("");
   const [employmentType, setEmploymentType] = useState<string>("");
+  const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
 
   const employeeDetails = {
     name,
@@ -13,7 +14,7 @@ const EmployeeForm = () => {
     employmentType,
   };
 
-  const addEmployeeFormHandler = (e) => {
+  const addEmployeeFormHandler = (e: React.FormEvent<HTMLFormElement>) => {
     // I will add my employee to database
     e.preventDefault();
 
@@ -32,9 +33,8 @@ const EmployeeForm = () => {
       });
 
     setName("");
-    setDepartment("");
-    setEmploymentType("");
     setJobTitle("");
+    setIsFormSubmitted(true);
   };
 
   return (
@@ -53,6 +53,8 @@ const EmployeeForm = () => {
           className="form-control mb-3"
           type="text"
           id="name"
+          value={name}
+          required
         />
         <label className="form-label" htmlFor="job">
           Job Title:
@@ -62,6 +64,8 @@ const EmployeeForm = () => {
           className="form-control mb-3"
           type="text"
           id="job"
+          value={jobTitle}
+          required
         />
         <label className="form-label" htmlFor="">
           Department:
@@ -71,6 +75,8 @@ const EmployeeForm = () => {
           className="form-select mb-3"
           name=""
           id=""
+          value={isFormSubmitted ? "" : department}
+          required
         >
           <option selected value="">
             Please select an option
@@ -86,6 +92,8 @@ const EmployeeForm = () => {
           className="form-select mb-3"
           name=""
           id=""
+          value={isFormSubmitted ? "" : employmentType}
+          required
         >
           <option selected value="">
             Please select an option
