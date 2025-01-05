@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const EmployeeForm = () => {
+const EmployeeForm = ({ editEmployee }) => {
+  console.log(editEmployee);
+
   const [name, setName] = useState<string>("");
   const [jobTitle, setJobTitle] = useState<string>("");
   const [department, setDepartment] = useState<string>("");
   const [employmentType, setEmploymentType] = useState<string>("");
   const [isFormSubmitted, setIsFormSubmitted] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (editEmployee) {
+      setName(editEmployee.name);
+      setJobTitle(editEmployee.jobTitle);
+      setDepartment(editEmployee.department);
+      setEmploymentType(editEmployee.employmentType);
+    } else {
+      setName("");
+      setJobTitle("");
+      setDepartment("");
+      setEmploymentType("");
+    }
+  }, [editEmployee]);
 
   const employeeDetails = {
     name,
@@ -104,7 +120,7 @@ const EmployeeForm = () => {
         </select>
 
         <button type="submit" className="btn btn-primary">
-          Add Employee
+          {editEmployee ? "Update Employee" : "Add Employee"}
         </button>
       </form>
     </div>
