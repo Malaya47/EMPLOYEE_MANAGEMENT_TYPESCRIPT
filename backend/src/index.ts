@@ -51,6 +51,23 @@ app.put("/updateEmployee/:id", async (req: Request, res: Response) => {
   }
 });
 
+// Delete employee route
+app.delete("/deleteEmployee/:id", async (req: Request, res: Response) => {
+  try {
+    const employeeId = req.params.id;
+    await EmployeeModel.destroy({
+      where: {
+        id: employeeId,
+      },
+    });
+    res.status(200).json({ message: "Employee deleted successfully" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "An error occured while deleting employee" });
+  }
+});
+
 // Get all employee route
 app.get("/getEmployees", async (req: Request, res: Response) => {
   try {
