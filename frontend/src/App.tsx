@@ -34,6 +34,22 @@ const App: React.FC = () => {
     fetchEmployees();
   };
 
+  // Delete handler
+  const deleteHandler = (employeeId) => {
+    fetch(`http://localhost:3000/deleteEmployee/${employeeId}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+    })
+      .then(function (res) {
+        handleEmployeeUpdate();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <NavBar />
@@ -60,7 +76,12 @@ const App: React.FC = () => {
               >
                 Edit
               </button>
-              <button className="btn btn-sm btn-danger">Delete</button>
+              <button
+                onClick={() => deleteHandler(employee.id)}
+                className="btn btn-sm btn-danger"
+              >
+                Delete
+              </button>
             </div>
           </li>
         ))}
